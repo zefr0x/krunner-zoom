@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=krunner-zoom
+Comment=Open zoom meetings from a saved list in a json file or directly using the meeting id.
+X-KDE-ServiceTypes=Plasma/Runner
+Type=Service
+Icon=%{ICON}
+X-KDE-PluginInfo-Author=zer0-x
+X-KDE-PluginInfo-Website=https://github.com/zer0-x/krunner-zoom/
+X-KDE-PluginInfo-Name=krunner-zoom
+X-KDE-PluginInfo-Version=0.0
+X-KDE-PluginInfo-License=GPL-3.0
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-API=DBus
+X-Plasma-DBusRunner-Service=com.github.krunner.zoom
+X-Plasma-DBusRunner-Path=/krunnerZoom

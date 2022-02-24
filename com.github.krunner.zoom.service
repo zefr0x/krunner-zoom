@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=com.github.krunner.zoom
+Exec=/usr/bin/python3 "%{PROJECTDIR}/%{APPNAMELC}.py"
