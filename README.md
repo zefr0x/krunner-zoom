@@ -1,4 +1,4 @@
-[![Get the runner from kde store](https://raw.githubusercontent.com/ZER0-X/badges/main/kde/store/get-the-app-runner.svg)](https://store.kde.org/)
+[![Get the runner from kde store](https://raw.githubusercontent.com/ZER0-X/badges/main/kde/store/get-the-app-runner.svg)](https://www.pling.com/p/1719751/)
 
 
 A KRunner plugin to open zoom meetings from a saved list in an ini file or directly using the meeting id.
