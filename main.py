@@ -3,7 +3,6 @@
 
 from pathlib import Path
 from configparser import ConfigParser
-from typing import Optional
 from os import system
 
 import dbus.service
@@ -20,13 +19,13 @@ objpath = "/krunnerZoom"
 iface = "org.kde.krunner1"
 
 
-def get_opener_path() -> Optional[str]:
+def get_opener_path() -> str:
     """Find the opening utility path."""
     openers_list = ["/usr/bin/xdg-open", "/usr/bin/open"]
     for opener in openers_list:
         if Path.exists(Path(opener)):
             return opener
-    return None
+    raise EnvironmentError("xdg-open utility was not found.")
 
 
 def get_meetings_list() -> list:
