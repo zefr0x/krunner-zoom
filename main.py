@@ -5,9 +5,13 @@ from pathlib import Path
 from configparser import ConfigParser
 from os import system
 
+import dbus
 import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GLib
+
+KEY_WORD = "zm"
+MAX_RESULTS = 13
 
 
 icon_path = str(Path.joinpath(Path.cwd(), "assets", "icon.png"))
@@ -89,6 +93,13 @@ class Runner(dbus.service.Object):
 
         self.opener_path = get_opener_path()
         self.meetings = get_meetings_list()
+
+        # Connet to klipper to use the clipboard.
+        self.bus = dbus.SessionBus()
+        self.klipper_iface = dbus.Interface(
+            self.bus.get_object("org.kde.klipper", "/klipper"), "org.kde.klipper.klipper"
+        )
+
         return None
 
     @dbus.service.method(iface, in_signature="s", out_signature="a(sssida{sv})")
@@ -96,7 +107,7 @@ class Runner(dbus.service.Object):
         """Get the matches and return a list of tupels."""
         returns: list = []
 
-        if query.startswith("zm"):
+        if query.startswith(KEY_WORD):
             query = query[3:]
 
             if query == "update":
@@ -130,7 +141,7 @@ class Runner(dbus.service.Object):
                 )
 
             for meeting in self.meetings:
-                if query in meeting["name"]:
+                if query in meeting["name"].lower():
                     # data, display text, icon, type (Plasma::QueryType), relevance (0-1), properties (subtext, category and urls)
                     returns.append(
                         (
@@ -143,7 +154,7 @@ class Runner(dbus.service.Object):
                         )
                     )
 
-            return returns
+            return returns[:MAX_RESULTS]
         else:
             return []
 
@@ -161,27 +172,30 @@ class Runner(dbus.service.Object):
     def Run(self, data: str, action_id: str):
         """Handle actions calls."""
         if data == "":
-            pass
-        elif action_id == "":
-            if data == "temp_metting":
-                meeting_data = self.temp_metting
-            else:
-                for meeting_data in self.meetings:
-                    if meeting_data["section"] == data:
-                        break
-            meeting_uri = f"zoommtg://zoom.us/join?action=join&confno={meeting_data['id']}&pwd={meeting_data['passcode'] or ''}"
-            system(f"{self.opener_path} {meeting_uri}")
-        elif id == "0":
-            # CONT
-            pass
-        elif id == "1":
-            # CONT
-            pass
-        elif id == "2":
-            # CONT
-            pass
+            return None
+        elif data == "temp_metting":
+            meeting_data = self.temp_metting
+        else:
+            for meeting_data in self.meetings:
+                if meeting_data["section"] == data:
+                    break
 
-        print(data, action_id)  # TODO remove after debug
+        meeting_uri = (f"zoommtg://zoom.us/join?action=join&confno={meeting_data['id']}"
+                       + ('&pwd=' + meeting_data['passcode'] if meeting_data['passcode'] else ""))
+
+        if action_id == "":
+            system(f"{self.opener_path} {meeting_uri}")
+        elif action_id == "0":
+            self.klipper_iface.setClipboardContents(meeting_data["id"])
+            pass
+        elif action_id == "1":
+            try:
+                self.klipper_iface.setClipboardContents(meeting_data["passcode"])
+            except Exception:
+                pass
+        elif action_id == "2":
+            self.klipper_iface.setClipboardContents("https" + meeting_uri[7:])
+            pass
 
 
 runner = Runner()
