@@ -113,7 +113,7 @@ class Runner(dbus.service.Object):
         returns: list = []
 
         if query.startswith(KEY_WORD):
-            query = query[3:]
+            query = query[3:].strip()
 
             if query == "update":
                 self.meetings = get_meetings_list()
@@ -192,7 +192,7 @@ class Runner(dbus.service.Object):
         )
 
         if action_id == "":
-            system(f"{self.opener_path} {meeting_uri}")
+            system(f"{self.opener_path} '{meeting_uri}'")
         elif action_id == "0":
             self.klipper_iface.setClipboardContents(meeting_data["id"])
             pass
