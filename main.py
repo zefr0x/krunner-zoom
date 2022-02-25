@@ -97,7 +97,8 @@ class Runner(dbus.service.Object):
         # Connet to klipper to use the clipboard.
         self.bus = dbus.SessionBus()
         self.klipper_iface = dbus.Interface(
-            self.bus.get_object("org.kde.klipper", "/klipper"), "org.kde.klipper.klipper"
+            self.bus.get_object("org.kde.klipper", "/klipper"),
+            "org.kde.klipper.klipper",
         )
 
         return None
@@ -142,7 +143,8 @@ class Runner(dbus.service.Object):
 
             for meeting in self.meetings:
                 if query in meeting["name"].lower():
-                    # data, display text, icon, type (Plasma::QueryType), relevance (0-1), properties (subtext, category and urls)
+                    # data, display text, icon, type (Plasma::QueryType), relevance (0-1),
+                    # properties (subtext, category and urls)
                     returns.append(
                         (
                             meeting["section"],
@@ -180,8 +182,10 @@ class Runner(dbus.service.Object):
                 if meeting_data["section"] == data:
                     break
 
-        meeting_uri = (f"zoommtg://zoom.us/join?action=join&confno={meeting_data['id']}"
-                       + ('&pwd=' + meeting_data['passcode'] if meeting_data['passcode'] else ""))
+        meeting_uri = (
+            f"zoommtg://zoom.us/join?action=join&confno={meeting_data['id']}"
+            + ("&pwd=" + meeting_data["passcode"] if meeting_data["passcode"] else "")
+        )
 
         if action_id == "":
             system(f"{self.opener_path} {meeting_uri}")
@@ -194,7 +198,7 @@ class Runner(dbus.service.Object):
             except Exception:
                 pass
         elif action_id == "2":
-            self.klipper_iface.setClipboardContents("https" + meeting_uri[7:])
+            self.klipper_iface.setClipboardContents(meeting_uri)
             pass
 
 
