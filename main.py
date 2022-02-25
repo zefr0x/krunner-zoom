@@ -83,7 +83,7 @@ class Runner(dbus.service.Object):
         """Get opener path and load meetings list."""
         dbus.service.Object.__init__(
             self,
-            dbus.service.BusName("com.github.krunner.zoom", dbus.SessionBus()),
+            dbus.service.BusName("com.github.zer0-x.krunner-zoom", dbus.SessionBus()),
             objpath,
         )
 
