@@ -14,7 +14,11 @@ KEY_WORD = "zm"
 MAX_RESULTS = 13
 
 
-icon_path = str(Path.joinpath(Path.cwd(), "assets", "icon.png"))
+icon_path = str(
+    Path.joinpath(
+        Path.home(), ".local", "share", "pixmaps", "com.github.zer0-x.krunner-zoom.png"
+    )
+)
 
 DBusGMainLoop(set_as_default=True)
 
