@@ -116,7 +116,7 @@ class Runner(dbus.service.Object):
                 return [
                     (
                         "",
-                        "Meetings list has been loaded successfully.",
+                        "Config loaded successfully!",
                         icon_path,
                         100,
                         1.0,
