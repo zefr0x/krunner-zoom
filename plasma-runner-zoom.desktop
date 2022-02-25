@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=krunner-zoom
-Comment=Open zoom meetings from a saved list in a json file or directly using the meeting id.
+Comment=Open zoom meetings from a saved list in an ini file or directly using the meeting id.
 X-KDE-ServiceTypes=Plasma/Runner
 Type=Service
 Icon=%{ICON}
