@@ -14,11 +14,7 @@ KEY_WORD = "zm"
 MAX_RESULTS = 13
 
 
-icon_path = str(
-    Path.joinpath(
-        Path.home(), ".local", "share", "pixmaps", "com.github.zer0-x.krunner-zoom.png"
-    )
-)
+icon_path = str(Path.home()) + "/.local/share/pixmaps/com.github.zer0-x.krunner-zoom.png"
 
 DBusGMainLoop(set_as_default=True)
 
@@ -50,13 +46,11 @@ def get_meetings_list() -> list:
         try:
             meeting_name = config[meeting]["name"]
         except KeyError:
-            meeting_name = "Undefined"
-
+            meeting_name = "Unnamed meeting"
         try:
             meeting_id = config[meeting]["id"]
         except KeyError:
             continue
-
         try:
             meeting_passcode = config[meeting]["passcode"]
         except KeyError:
@@ -77,7 +71,7 @@ def get_meetings_list() -> list:
 def create_temp_meeting(meeting_id: str, passcode: str = None):
     """Create a temp meeting to be joined directly in the session witout saveing it."""
     return {
-        "section": "temp_metting",
+        "section": "temp_meeting",
         "name": meeting_id,
         "id": meeting_id,
         "passcode": passcode,
@@ -179,7 +173,7 @@ class Runner(dbus.service.Object):
         """Handle actions calls."""
         if data == "":
             return None
-        elif data == "temp_metting":
+        elif data == "temp_meeting":
             meeting_data = self.temp_metting
         else:
             for meeting_data in self.meetings:

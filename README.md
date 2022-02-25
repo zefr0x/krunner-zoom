@@ -31,6 +31,9 @@ $ ./uninstall.sh
 4. Search for the Plugin
 5. Click `Install`
 
+### Uninstall
+Please run the uninstall script manually, because the GUI will remove the script before running it.
+
 # Usage & Configuration
 ## config file
 1. Create a file in your home directory with the name: `.zoom_meetings_runner`
