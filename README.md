@@ -1,4 +1,4 @@
-[![Get the runner from kde store](https://raw.githubusercontent.com/ZER0-X/badges/main/kde/store/get-the-app-runner.svg)](https://www.pling.com/p/1719808/)
+[![Get the runner from kde store](https://raw.githubusercontent.com/ZER0-X/badges/main/kde/store/get-the-app-runner.svg)](https://www.pling.com/p/1719751/)
 
 
 A KRunner plugin to open zoom meetings from a saved list in an ini file or directly using the meeting id.
@@ -42,17 +42,17 @@ Please run the uninstall script manually, because the GUI will remove the script
 ```ini
 [meeting_1]
 name=MATH-302 online class
-id= 11111111111
+id=11111111111
 
 [meeting_2]
 name=Programming club weekly meeting
-id= 123123123123
+id=123123123123
 passcode=123
 
 [meeting_3]
-name=data since club meeting
+name=data science club meeting
 id=45645646
-passcode=somesecrettxt0123
+passcode=SoMEseCrEtTExT489
 ```
 ## Join saved meetins
 1. Type the keyword `zm` in KRunner.

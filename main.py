@@ -3,7 +3,7 @@
 
 from pathlib import Path
 from configparser import ConfigParser
-from os import system
+from subprocess import run as subprocess_run
 
 import dbus
 import dbus.service
@@ -14,7 +14,9 @@ KEY_WORD = "zm"
 MAX_RESULTS = 13
 
 
-icon_path = str(Path.home()) + "/.local/share/pixmaps/com.github.zer0-x.krunner-zoom.png"
+icon_path = (
+    str(Path.home()) + "/.local/share/pixmaps/com.github.zer0-x.krunner-zoom.png"
+)
 
 DBusGMainLoop(set_as_default=True)
 
@@ -68,16 +70,6 @@ def get_meetings_list() -> list:
     return meetings
 
 
-def create_temp_meeting(meeting_id: str, passcode: str = None):
-    """Create a temp meeting to be joined directly in the session witout saveing it."""
-    return {
-        "section": "temp_meeting",
-        "name": meeting_id,
-        "id": meeting_id,
-        "passcode": passcode,
-    }
-
-
 class Runner(dbus.service.Object):
     """Comunicate with KRunner, load the config file and metch the queries."""
 
@@ -92,17 +84,16 @@ class Runner(dbus.service.Object):
         self.opener_path = get_opener_path()
         self.meetings = get_meetings_list()
 
-        # Connet to klipper to use the clipboard.
+        # Connect to klipper to use the clipboard.
         self.bus = dbus.SessionBus()
         self.klipper_iface = dbus.Interface(
             self.bus.get_object("org.kde.klipper", "/klipper"),
             "org.kde.klipper.klipper",
         )
-
         return None
 
     @dbus.service.method(iface, in_signature="s", out_signature="a(sssida{sv})")
-    def Match(self, query: str):
+    def Match(self, query: str) -> list:
         """Get the matches and return a list of tupels."""
         returns: list = []
 
@@ -118,7 +109,7 @@ class Runner(dbus.service.Object):
                         icon_path,
                         100,
                         1.0,
-                        {},
+                        {"actions": ""},  # TODO debug
                     )
                 ]
 
@@ -127,7 +118,12 @@ class Runner(dbus.service.Object):
             except Exception:
                 pass
             else:
-                self.temp_metting = create_temp_meeting(query)
+                self.temp_meeting = {
+                    "section": "temp_meeting",
+                    "name": query,
+                    "id": query,
+                    "passcode": None,
+                }
                 returns.append(
                     (
                         "temp_metting",
@@ -135,7 +131,7 @@ class Runner(dbus.service.Object):
                         icon_path,
                         100,
                         1.0,
-                        {},
+                        {"actions": ["0", "2"]},
                     )
                 )
 
@@ -155,11 +151,10 @@ class Runner(dbus.service.Object):
                     )
 
             return returns[:MAX_RESULTS]
-        else:
-            return []
+        return []
 
     @dbus.service.method(iface, out_signature="a(sss)")
-    def Actions(self):
+    def Actions(self) -> list:
         """Return a list of actions."""
         return [
             # id, text, icon
@@ -169,12 +164,12 @@ class Runner(dbus.service.Object):
         ]
 
     @dbus.service.method(iface, in_signature="ss")
-    def Run(self, data: str, action_id: str):
+    def Run(self, data: str, action_id: str) -> None:
         """Handle actions calls."""
         if data == "":
             return None
         elif data == "temp_meeting":
-            meeting_data = self.temp_metting
+            meeting_data = self.temp_meeting
         else:
             for meeting_data in self.meetings:
                 if meeting_data["section"] == data:
@@ -186,10 +181,9 @@ class Runner(dbus.service.Object):
         )
 
         if action_id == "":
-            system(f"{self.opener_path} '{meeting_uri}'")
+            subprocess_run([self.opener_path, meeting_uri])
         elif action_id == "0":
             self.klipper_iface.setClipboardContents(meeting_data["id"])
-            pass
         elif action_id == "1":
             try:
                 self.klipper_iface.setClipboardContents(meeting_data["passcode"])
@@ -197,7 +191,7 @@ class Runner(dbus.service.Object):
                 pass
         elif action_id == "2":
             self.klipper_iface.setClipboardContents(meeting_uri)
-            pass
+        return None
 
 
 runner = Runner()
