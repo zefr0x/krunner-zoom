@@ -4,13 +4,21 @@
 from pathlib import Path
 from configparser import ConfigParser
 from subprocess import run as subprocess_run
+from gettext import gettext, bindtextdomain, textdomain
 
 import dbus
 import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GLib
 
-KEY_WORD = "zm"
+# Setup gettext for internationalization.
+bindtextdomain("messages", "locales")
+textdomain("messages")
+_ = gettext
+
+
+key_word = _("zm")
+key_word_length = len(key_word) + 1
 MAX_RESULTS = 13
 
 
@@ -48,7 +56,7 @@ def get_meetings_list() -> list:
         try:
             meeting_name = config[meeting]["name"]
         except KeyError:
-            meeting_name = "Unnamed meeting"
+            meeting_name = _("Unnamed meeting")
         try:
             meeting_id = config[meeting]["id"]
         except KeyError:
@@ -97,19 +105,19 @@ class Runner(dbus.service.Object):
         """Get the matches and return a list of tupels."""
         returns: list = []
 
-        if query.startswith(KEY_WORD):
-            query = query[3:].strip()
+        if query.startswith(key_word):
+            query = query[key_word_length:].strip()
 
-            if query == "update":
+            if query == _("update"):
                 self.meetings = get_meetings_list()
                 return [
                     (
                         "",
-                        "Config loaded successfully!",
+                        _("Config loaded successfully!"),
                         icon_path,
                         100,
                         1.0,
-                        {"actions": ""},  # TODO debug
+                        {"actions": ""},
                     )
                 ]
 
@@ -127,7 +135,7 @@ class Runner(dbus.service.Object):
                 returns.append(
                     (
                         "temp_metting",
-                        f"Join meeting with id: {query}",
+                        _("Join meeting with id: %s") % query,
                         icon_path,
                         100,
                         1.0,
@@ -138,7 +146,7 @@ class Runner(dbus.service.Object):
             for meeting in self.meetings:
                 if query in meeting["name"].lower():
                     # data, display text, icon, type (Plasma::QueryType), relevance (0-1),
-                    # properties (subtext, category and urls)
+                    # properties (subtext, category and urls ...)
                     returns.append(
                         (
                             meeting["section"],
@@ -158,9 +166,9 @@ class Runner(dbus.service.Object):
         """Return a list of actions."""
         return [
             # id, text, icon
-            ("0", "Copy meeting id", "edit-copy"),
-            ("1", "Copy meeting passcode", "password-copy"),
-            ("2", "Copy meeting uri", "gnumeric-link-url"),
+            ("0", _("Copy meeting id"), "edit-copy"),
+            ("1", _("Copy meeting passcode"), "password-copy"),
+            ("2", _("Copy meeting uri"), "gnumeric-link-url"),
         ]
 
     @dbus.service.method(iface, in_signature="ss")

@@ -1,0 +1,49 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-03-01 20:11+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: ./main.py:20
+msgid "zm"
+msgstr ""
+
+#: ./main.py:59
+msgid "Unnamed meeting"
+msgstr ""
+
+#: ./main.py:111
+msgid "update"
+msgstr ""
+
+#: ./main.py:116
+msgid "Config loaded successfully!"
+msgstr ""
+
+#: ./main.py:138
+msgid "Join meeting with id: %s"
+msgstr ""
+
+#: ./main.py:169
+msgid "Copy meeting id"
+msgstr ""
+
+#: ./main.py:170
+msgid "Copy meeting passcode"
+msgstr ""
+
+#: ./main.py:171
+msgid "Copy meeting uri"
+msgstr ""
+

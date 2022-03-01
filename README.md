@@ -1,4 +1,4 @@
-[![Get the runner from kde store](https://raw.githubusercontent.com/ZER0-X/badges/main/kde/store/get-the-app-runner.svg)](https://www.pling.com/p/1719751/)
+[![Get the runner from kde store](https://raw.githubusercontent.com/ZER0-X/badges/main/kde/store/get-the-app-runner.svg)](https://www.pling.com/p/1719808/)
 
 
 A KRunner plugin to open zoom meetings from a saved list in an ini file or directly using the meeting id.
@@ -55,18 +55,31 @@ id=45645646
 passcode=SoMEseCrEtTExT489
 ```
 ## Join saved meetins
+> The key words are different depending on the language so check the list bellow.
 1. Type the keyword `zm` in KRunner.
 2. type `<Space>` and search in your meeting list.
 3. Click `<Enter>` the join the meeting.
 4. Also you are able use the actions to copy the meeting id, passcode or uri.
 
 ## Join meeting directly with the id.
+> The key words are different depending on the language so check the list bellow.
 1. Type the keyword `zm` in KRunner.
 2. type `<Space>` and then type the meeting id.
 3. Click `<Enter>` to join the meeting.
 
 ## Load your config
+> The key words are different depending on the language so check the list bellow.
+
 If you edited your meetings list you are able to load the changes whitout restarting the plugin.
 1. Type the keyword `zm` in KRunner.
 2. type `<Space>` and then type `update`.
 3. You should get a success message.
+
+# Key words list
+The key words are different form laguage to another so check the list bellow to find the appropriate key words for you.
+- English
+    1. `zm`
+    2. `update`
+- ...
+    1. `zm`
+    2. `update`
