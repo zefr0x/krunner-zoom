@@ -1,10 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Heimen Stoffels <vistausss@fastmail.com>, 2022.
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: Dutch krunner-zoom\n"
 "POT-Creation-Date: 2022-03-01 20:11+0300\n"
 "PO-Revision-Date: 2022-03-03 14:10+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"

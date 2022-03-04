@@ -1,5 +1,3 @@
-# Copyright (C) zer0-x
-#
 # zer0-x <zer0-x.7ty50@aleeas.com>, 2022.
 msgid ""
 msgstr ""

@@ -77,12 +77,15 @@ If you edited your meetings list you are able to load the changes whitout restar
 
 # Key words list
 The key words are different form laguage to another so check the list bellow to find the appropriate key words for you.
-- English
-    - `zm`
-    - `update`
 - Arabic
     - `زم`
     - `تحديث`
+- English
+    - `zm`
+    - `update`
+- Dutch
+    - `zm`
+    - `bijwerken`
 - ...
     - `zm`
     - `update`
