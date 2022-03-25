@@ -35,15 +35,6 @@ IFACE = "org.kde.krunner1"
 SERVICE = "com.github.zer0-x.krunner-zoom"
 
 
-def get_opener_path() -> str:
-    """Find the opening utility path."""
-    openers_list = ["/usr/bin/xdg-open", "/usr/bin/open"]
-    for opener in openers_list:
-        if Path.exists(Path(opener)):
-            return opener
-    raise EnvironmentError("xdg-open utility was not found.")
-
-
 class Runner(dbus.service.Object):
     """Comunicate with KRunner, load the config file and metch the queries."""
 
@@ -55,8 +46,11 @@ class Runner(dbus.service.Object):
             OBJPATH,
         )
 
-        self.opener_path = get_opener_path()
-
+        for opener in ["/usr/bin/xdg-open", "/usr/bin/open"]:
+            if Path.exists(Path(opener)):
+                self.opener_path = opener
+                return None
+        raise EnvironmentError("xdg-open utility was not found.")
         return None
 
     def load_meetings(self) -> None:
