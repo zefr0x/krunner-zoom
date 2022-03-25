@@ -2,9 +2,11 @@
 """A KRunner plugin to open zoom meetings from a saved list or directly using the meeting id."""
 
 from pathlib import Path
-from configparser import ConfigParser
-from subprocess import run as subprocess_run
 from gettext import gettext, bindtextdomain, textdomain
+
+# The next import are on-time imports in the middle of the file to save memory.
+# from configparser import ConfigParser
+# from subprocess import run as subprocess_run
 
 import dbus
 import dbus.service
@@ -28,9 +30,9 @@ icon_path = (
 
 DBusGMainLoop(set_as_default=True)
 
-objpath = "/krunnerZoom"
-
-iface = "org.kde.krunner1"
+OBJPATH = "/krunnerZoom"
+IFACE = "org.kde.krunner1"
+SERVICE = "com.github.zer0-x.krunner-zoom"
 
 
 def get_opener_path() -> str:
@@ -42,42 +44,6 @@ def get_opener_path() -> str:
     raise EnvironmentError("xdg-open utility was not found.")
 
 
-def get_meetings_list() -> list:
-    """Return a list of the saved meetings form an ini file."""
-    meetings: list = []
-
-    config = ConfigParser()
-    config.read(Path.joinpath(Path.home(), ".zoom_meetings_runner"))
-
-    for meeting in config.sections():
-        if not meeting.startswith("meeting_"):
-            continue
-
-        try:
-            meeting_name = config[meeting]["name"]
-        except KeyError:
-            meeting_name = _("Unnamed meeting")
-        try:
-            meeting_id = config[meeting]["id"]
-        except KeyError:
-            continue
-        try:
-            meeting_passcode = config[meeting]["passcode"]
-        except KeyError:
-            meeting_passcode = None
-
-        meetings.append(
-            {
-                "section": meeting,
-                "name": meeting_name,
-                "id": meeting_id,
-                "passcode": meeting_passcode,
-            }
-        )
-
-    return meetings
-
-
 class Runner(dbus.service.Object):
     """Comunicate with KRunner, load the config file and metch the queries."""
 
@@ -85,22 +51,63 @@ class Runner(dbus.service.Object):
         """Get opener path and load meetings list."""
         dbus.service.Object.__init__(
             self,
-            dbus.service.BusName("com.github.zer0-x.krunner-zoom", dbus.SessionBus()),
-            objpath,
+            dbus.service.BusName(SERVICE, dbus.SessionBus()),
+            OBJPATH,
         )
 
         self.opener_path = get_opener_path()
-        self.meetings = get_meetings_list()
+        self.load_meetings()
 
-        # Connect to klipper to use the clipboard.
-        self.bus = dbus.SessionBus()
+        return None
+
+    def load_meetings(self) -> None:
+        """Load meetings list if it was't loaded before in the match session."""
+        if hasattr(self, "meetings"):
+            return None
+
+        self.meetings: list = []
+
+        config = __import__("configparser").ConfigParser()
+        config.read(Path.joinpath(Path.home(), ".zoom_meetings_runner"))
+
+        for meeting in config.sections():
+            if not meeting.startswith("meeting_"):
+                continue
+
+            try:
+                meeting_id = config[meeting]["id"]
+            except KeyError as e:
+                print(e)
+                continue
+            try:
+                meeting_name = config[meeting]["name"]
+            except KeyError:
+                meeting_name = meeting
+            try:
+                meeting_passcode = config[meeting]["passcode"]
+            except KeyError:
+                meeting_passcode = None
+
+            self.meetings.append(
+                {
+                    "section": meeting,
+                    "name": meeting_name,
+                    "id": meeting_id,
+                    "passcode": meeting_passcode,
+                }
+            )
+
+        return None
+
+    def load_klipper_interface(self) -> None:
+        """Connect to a klipper Dbus interface if there was't one in the current match session."""
         self.klipper_iface = dbus.Interface(
-            self.bus.get_object("org.kde.klipper", "/klipper"),
+            dbus.SessionBus().get_object("org.kde.klipper", "/klipper"),
             "org.kde.klipper.klipper",
         )
         return None
 
-    @dbus.service.method(iface, in_signature="s", out_signature="a(sssida{sv})")
+    @dbus.service.method(IFACE, in_signature="s", out_signature="a(sssida{sv})")
     def Match(self, query: str) -> list:
         """Get the matches and return a list of tupels."""
         returns: list = []
@@ -109,7 +116,7 @@ class Runner(dbus.service.Object):
             query = query[key_word_length:].strip()
 
             if query == _("update"):
-                self.meetings = get_meetings_list()
+                self.load_meetings()
                 return [
                     (
                         "",
@@ -121,15 +128,11 @@ class Runner(dbus.service.Object):
                     )
                 ]
 
-            try:
-                assert int(query)
-            except Exception:
-                pass
-            else:
+            if query.isdecimal():
                 self.temp_meeting = {
                     "section": "temp_meeting",
                     "name": query,
-                    "id": query,
+                    "id": str(int(query)),  # If non-ascii degits were used.
                     "passcode": None,
                 }
                 returns.append(
@@ -161,7 +164,7 @@ class Runner(dbus.service.Object):
             return returns[:MAX_RESULTS]
         return []
 
-    @dbus.service.method(iface, out_signature="a(sss)")
+    @dbus.service.method(IFACE, out_signature="a(sss)")
     def Actions(self) -> list:
         """Return a list of actions."""
         return [
@@ -171,7 +174,7 @@ class Runner(dbus.service.Object):
             ("2", _("Copy meeting uri"), "gnumeric-link-url"),
         ]
 
-    @dbus.service.method(iface, in_signature="ss")
+    @dbus.service.method(IFACE, in_signature="ss")
     def Run(self, data: str, action_id: str) -> None:
         """Handle actions calls."""
         if data == "":
@@ -189,8 +192,11 @@ class Runner(dbus.service.Object):
         )
 
         if action_id == "":
-            subprocess_run([self.opener_path, meeting_uri])
-        elif action_id == "0":
+            __import__("subprocess").run([self.opener_path, meeting_uri])
+            return None
+
+        self.load_klipper_interface()
+        if action_id == "0":
             self.klipper_iface.setClipboardContents(meeting_data["id"])
         elif action_id == "1":
             try:
