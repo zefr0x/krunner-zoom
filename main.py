@@ -130,6 +130,10 @@ class Runner(dbus.service.Object):
             self.load_meetings()
             for meeting in self.meetings:
                 if query in meeting["name"].lower():
+                    if meeting["passcode"] is not None:
+                        properties = {"actions": ["copy_id", "copy_passcode", "copy_uri"]}
+                    else:
+                        properties = {"actions": ["copy_id", "copy_uri"]}
                     # data, display text, icon, type (Plasma::QueryType), relevance (0-1),
                     # properties (subtext, category and urls ...)
                     returns.append(
@@ -139,7 +143,7 @@ class Runner(dbus.service.Object):
                             icon_path,
                             100,
                             1.0,
-                            {},
+                            properties,
                         )
                     )
 
@@ -181,10 +185,7 @@ class Runner(dbus.service.Object):
         if action_id == "copy_id":
             self.klipper_iface.setClipboardContents(meeting_data["id"])
         elif action_id == "copy_passcode":
-            try:
-                self.klipper_iface.setClipboardContents(meeting_data["passcode"])
-            except Exception:
-                pass
+            self.klipper_iface.setClipboardContents(meeting_data["passcode"])
         elif action_id == "copy_uri":
             self.klipper_iface.setClipboardContents(meeting_uri)
         return None
