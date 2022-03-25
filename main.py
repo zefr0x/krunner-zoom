@@ -45,12 +45,6 @@ class Runner(dbus.service.Object):
             dbus.service.BusName(SERVICE, dbus.SessionBus()),
             OBJPATH,
         )
-
-        for opener in ["/usr/bin/xdg-open", "/usr/bin/open"]:
-            if Path.exists(Path(opener)):
-                self.opener_path = opener
-                return None
-        raise EnvironmentError("xdg-open utility was not found.")
         return None
 
     def load_meetings(self) -> None:
@@ -92,15 +86,6 @@ class Runner(dbus.service.Object):
 
         return None
 
-    def load_klipper_interface(self) -> None:
-        """Connect to a klipper Dbus interface if there was't one in the current match session."""
-        if not hasattr(self, "klipper_iface"):
-            self.klipper_iface = dbus.Interface(
-                dbus.SessionBus().get_object("org.kde.klipper", "/klipper"),
-                "org.kde.klipper.klipper",
-            )
-        return None
-
     @dbus.service.method(IFACE, in_signature="s", out_signature="a(sssida{sv})")
     def Match(self, query: str) -> list:
         """Get the matches and return a list of tupels."""
@@ -131,7 +116,9 @@ class Runner(dbus.service.Object):
             for meeting in self.meetings:
                 if query in meeting["name"].lower():
                     if meeting["passcode"] is not None:
-                        properties = {"actions": ["copy_id", "copy_passcode", "copy_uri"]}
+                        properties = {
+                            "actions": ["copy_id", "copy_passcode", "copy_uri"]
+                        }
                     else:
                         properties = {"actions": ["copy_id", "copy_uri"]}
                     # data, display text, icon, type (Plasma::QueryType), relevance (0-1),
@@ -177,17 +164,34 @@ class Runner(dbus.service.Object):
             + ("&pwd=" + meeting_data["passcode"] if meeting_data["passcode"] else "")
         )
 
+        # Since the match session will be killed after we run an action,
+        # no need to load thing in the object scope.
+
         if action_id == "":
-            __import__("subprocess").run([self.opener_path, meeting_uri])
+            opener_path = None
+            for opener in ["/usr/bin/xdg-open", "/usr/bin/open"]:
+                if Path.exists(Path(opener)):
+                    opener_path = opener
+            if opener_path is None:
+                raise FileNotFoundError(
+                    "No open utility was found. Install `xdg-utils`."
+                )
+            else:
+                __import__("subprocess").run([opener_path, meeting_uri])
             return None
 
-        self.load_klipper_interface()
+        # Connect to a klipper Dbus interface if there was't one in the current match session.
+        klipper_iface = dbus.Interface(
+            dbus.SessionBus().get_object("org.kde.klipper", "/klipper"),
+            "org.kde.klipper.klipper",
+        )
+
         if action_id == "copy_id":
-            self.klipper_iface.setClipboardContents(meeting_data["id"])
+            klipper_iface.setClipboardContents(meeting_data["id"])
         elif action_id == "copy_passcode":
-            self.klipper_iface.setClipboardContents(meeting_data["passcode"])
+            klipper_iface.setClipboardContents(meeting_data["passcode"])
         elif action_id == "copy_uri":
-            self.klipper_iface.setClipboardContents(meeting_uri)
+            klipper_iface.setClipboardContents(meeting_uri)
         return None
 
     @dbus.service.method(IFACE)
