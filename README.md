@@ -5,14 +5,14 @@ A KRunner plugin to open zoom meetings from a saved list in an ini file or direc
 
 # Installation
 ## Dependencies
-- Python3
+- python3
+- xdg-utils
 - python-dbus
-- Plasma5 desktop
-- KRunner
+- klipper
 
-🔴 You don't need to install any dependency, since most likely you will find all of them in any KDE Plasma5 desktop.
+🔴 Most likely you will find all of them in any KDE Plasma5 desktop.
 ## Install from git source code
-Go the the directory that you want to keep the code in.
+Go to the directory that you want to keep the code in.
 ```bash
 $ git clone https://github.com/zer0-x/krunner-zoom.git
 $ cd krunner-zoom
@@ -67,25 +67,13 @@ passcode=SoMEseCrEtTExT489
 2. type `<Space>` and then type the meeting id.
 3. Click `<Enter>` to join the meeting.
 
-## Load your config
-> The key words are different depending on the language so check the list bellow.
-
-If you edited your meetings list you are able to load the changes whitout restarting the plugin.
-1. Type the keyword `zm` in KRunner.
-2. type `<Space>` and then type `update`.
-3. You should get a success message.
-
 # Key words list
 The key words are different form laguage to another so check the list bellow to find the appropriate key words for you.
 - Arabic
     - `زم`
-    - `تحديث`
 - English
     - `zm`
-    - `update`
 - Dutch
     - `zm`
-    - `bijwerken`
 - ...
     - `zm`
-    - `update`
