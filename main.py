@@ -56,7 +56,6 @@ class Runner(dbus.service.Object):
         )
 
         self.opener_path = get_opener_path()
-        self.load_meetings()
 
         return None
 
@@ -115,19 +114,6 @@ class Runner(dbus.service.Object):
         if query.startswith(key_word):
             query = query[key_word_length:].strip()
 
-            if query == _("update"):
-                self.load_meetings()
-                return [
-                    (
-                        "",
-                        _("Config loaded successfully!"),
-                        icon_path,
-                        100,
-                        1.0,
-                        {"actions": ""},
-                    )
-                ]
-
             if query.isdecimal():
                 self.temp_meeting = {
                     "section": "temp_meeting",
@@ -146,6 +132,7 @@ class Runner(dbus.service.Object):
                     )
                 )
 
+            self.load_meetings()
             for meeting in self.meetings:
                 if query in meeting["name"].lower():
                     # data, display text, icon, type (Plasma::QueryType), relevance (0-1),
@@ -205,6 +192,14 @@ class Runner(dbus.service.Object):
                 pass
         elif action_id == "2":
             self.klipper_iface.setClipboardContents(meeting_uri)
+        return None
+    
+    @dbus.service.method(IFACE)
+    def Teardown(self) -> None:
+        """Save memory by deleting the meetings list and klipper connetion from the memory."""
+        del self.meetings
+        del self.temp_meeting
+        del self.klipper_iface
         return None
 
 
