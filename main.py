@@ -94,10 +94,11 @@ class Runner(dbus.service.Object):
 
     def load_klipper_interface(self) -> None:
         """Connect to a klipper Dbus interface if there was't one in the current match session."""
-        self.klipper_iface = dbus.Interface(
-            dbus.SessionBus().get_object("org.kde.klipper", "/klipper"),
-            "org.kde.klipper.klipper",
-        )
+        if not hasattr(self, "klipper_iface"):
+            self.klipper_iface = dbus.Interface(
+                dbus.SessionBus().get_object("org.kde.klipper", "/klipper"),
+                "org.kde.klipper.klipper",
+            )
         return None
 
     @dbus.service.method(IFACE, in_signature="s", out_signature="a(sssida{sv})")
@@ -105,7 +106,7 @@ class Runner(dbus.service.Object):
         """Get the matches and return a list of tupels."""
         returns: list = []
 
-        if query.startswith(key_word):
+        if query.startswith(key_word + " ") or query == key_word:
             query = query[key_word_length:].strip()
 
             if query.isdecimal():
@@ -187,7 +188,7 @@ class Runner(dbus.service.Object):
         elif action_id == "2":
             self.klipper_iface.setClipboardContents(meeting_uri)
         return None
-    
+
     @dbus.service.method(IFACE)
     def Teardown(self) -> None:
         """Save memory by deleting the meetings list and klipper connetion from the memory."""
