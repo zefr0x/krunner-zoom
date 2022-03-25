@@ -196,10 +196,8 @@ class Runner(dbus.service.Object):
 
     @dbus.service.method(IFACE)
     def Teardown(self) -> None:
-        """Save memory by deleting the meetings list and klipper connetion from the memory."""
-        del self.meetings
-        del self.temp_meeting
-        del self.klipper_iface
+        """Save memory by deleting the meetings list from the memory."""
+        del self.meetings, self.temp_meeting
         return None
 
 
