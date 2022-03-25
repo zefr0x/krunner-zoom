@@ -118,12 +118,12 @@ class Runner(dbus.service.Object):
                 }
                 returns.append(
                     (
-                        "temp_metting",
+                        "temp_meeting",
                         _("Join meeting with id: %s") % query,
                         icon_path,
                         100,
                         1.0,
-                        {"actions": ["0", "2"]},
+                        {"actions": ["copy_id", "copy_uri"]},
                     )
                 )
 
@@ -151,9 +151,9 @@ class Runner(dbus.service.Object):
         """Return a list of actions."""
         return [
             # id, text, icon
-            ("0", _("Copy meeting id"), "edit-copy"),
-            ("1", _("Copy meeting passcode"), "password-copy"),
-            ("2", _("Copy meeting uri"), "gnumeric-link-url"),
+            ("copy_id", _("Copy meeting id"), "edit-copy"),
+            ("copy_passcode", _("Copy meeting passcode"), "password-copy"),
+            ("copy_uri", _("Copy meeting uri"), "gnumeric-link-url"),
         ]
 
     @dbus.service.method(IFACE, in_signature="ss")
@@ -178,14 +178,14 @@ class Runner(dbus.service.Object):
             return None
 
         self.load_klipper_interface()
-        if action_id == "0":
+        if action_id == "copy_id":
             self.klipper_iface.setClipboardContents(meeting_data["id"])
-        elif action_id == "1":
+        elif action_id == "copy_passcode":
             try:
                 self.klipper_iface.setClipboardContents(meeting_data["passcode"])
             except Exception:
                 pass
-        elif action_id == "2":
+        elif action_id == "copy_uri":
             self.klipper_iface.setClipboardContents(meeting_uri)
         return None
 
