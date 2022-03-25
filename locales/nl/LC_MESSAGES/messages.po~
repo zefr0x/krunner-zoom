@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Dutch krunner-zoom\n"
-"POT-Creation-Date: 2022-03-25 10:49+0300\n"
+"POT-Creation-Date: 2022-03-01 20:11+0300\n"
 "PO-Revision-Date: 2022-03-03 14:10+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -14,31 +14,34 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: main.py:22
+#: main.py:20
 msgid "zm"
 msgstr "zm"
 
-#: main.py:121
+#: main.py:59
+msgid "Unnamed meeting"
+msgstr "Naamloze vergadering"
+
+#: main.py:111
+msgid "update"
+msgstr "bijwerken"
+
+#: main.py:116
+msgid "Config loaded successfully!"
+msgstr "De instellingen zijn geladen!"
+
+#: main.py:138
 msgid "Join meeting with id: %s"
 msgstr "Deelnemen aan vergadering met id ‘%s’"
 
-#: main.py:153
+#: main.py:169
 msgid "Copy meeting id"
 msgstr "Id kopiëren"
 
-#: main.py:154
+#: main.py:170
 msgid "Copy meeting passcode"
 msgstr "Toegangscode kopiëren"
 
-#: main.py:155
+#: main.py:171
 msgid "Copy meeting uri"
 msgstr "Adres kopiëren"
-
-#~ msgid "Unnamed meeting"
-#~ msgstr "Naamloze vergadering"
-
-#~ msgid "update"
-#~ msgstr "bijwerken"
-
-#~ msgid "Config loaded successfully!"
-#~ msgstr "De instellingen zijn geladen!"

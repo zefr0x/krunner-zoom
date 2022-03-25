@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-03-01 20:11+0300\n"
+"POT-Creation-Date: 2022-03-25 10:49+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,35 +15,23 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: ./main.py:20
+#: ./main.py:22
 msgid "zm"
 msgstr ""
 
-#: ./main.py:59
-msgid "Unnamed meeting"
-msgstr ""
-
-#: ./main.py:111
-msgid "update"
-msgstr ""
-
-#: ./main.py:116
-msgid "Config loaded successfully!"
-msgstr ""
-
-#: ./main.py:138
+#: ./main.py:121
 msgid "Join meeting with id: %s"
 msgstr ""
 
-#: ./main.py:169
+#: ./main.py:153
 msgid "Copy meeting id"
 msgstr ""
 
-#: ./main.py:170
+#: ./main.py:154
 msgid "Copy meeting passcode"
 msgstr ""
 
-#: ./main.py:171
+#: ./main.py:155
 msgid "Copy meeting uri"
 msgstr ""
 
