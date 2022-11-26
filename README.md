@@ -1,3 +1,5 @@
+> **Warning** : This repository/project is no longer maintained. I'm no longer using zoom, and I don't use KDE any more. If you are interested in the plugin, it's free software under the GPL-3.0 license, so you can create a fork and do any thing you want with it.
+
 [![Get the runner from kde store](https://raw.githubusercontent.com/ZER0-X/badges/main/kde/store/get-the-app-runner.svg)](https://www.pling.com/p/1719808/)
 
 
